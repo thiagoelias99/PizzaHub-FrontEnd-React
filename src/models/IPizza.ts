@@ -4,6 +4,9 @@ export interface IPizza {
     sellingPrice: number,
     ingredients?: {
         id: string,
-        ingredient_quantity: number
+        ingredient_quantity: number,
+        description: string,
+        unit: string,
+        valuePerUnit: number,
     }[]
 }

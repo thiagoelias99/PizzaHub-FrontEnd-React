@@ -4,3 +4,7 @@ export interface IIngredient {
     unit: string,
     valuePerUnit: number,
 }
+
+export interface IIngredientWithQuantity extends Partial<IIngredient>{
+    quantity?: number
+}

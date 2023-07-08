@@ -4,3 +4,7 @@ export interface IIngredient {
     unit: string,
     valuePerUnit: number,
 }
+
+export interface IIngredientWQuantity extends IIngredient{
+    ingredient_quantity: number
+}

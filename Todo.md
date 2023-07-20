@@ -1,1 +1,9 @@
-- Adicionar visualização / seleção de ingredietns nas pizzas
+- Adicionar edição de ingredietes nas pizzas - OK
+- Adicionar delete de ingredietes nas pizzas - OK
+- Adicionar inclusão de ingrediente na pizza - OK
+- Criar Pizza
+- Criar Ingredient
+- Validações
+    - Detalhes Pizza
+    - Detalhes Ingredients
+- Criar UI

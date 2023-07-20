@@ -4,7 +4,7 @@ import { Home } from "../pages/home/Home";
 import { IngredientList } from "../pages/ingredients/IngredientsList";
 import { IngredientsDetails } from "../pages/ingredients/IngredientsDetails";
 import { PizzasList } from "../pages/pizzas/PizzasList";
-import { PizzasDetails } from "../pages/pizzas/PizzasDetails";
+import { PizzasDetails } from "../pages/pizzas/PizzaDetails/PizzasDetails";
 
 const AppRoutes = () => (
     <BrowserRouter>

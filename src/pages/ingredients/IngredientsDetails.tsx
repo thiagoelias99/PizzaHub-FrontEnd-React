@@ -4,6 +4,8 @@ import { useFetch } from "../../hooks/useFetch";
 import { IIngredient } from "../../models/IIngredient";
 import { useEffect, useState } from "react";
 import { WebClient as api } from "../../services/webclient/axiosConfig";
+import { AppContainer } from "../../components/AppContainer/AppContainer";
+import { BackButton } from "../../components/Buttons/BackButton";
 
 const route = "ingredients";
 
@@ -33,11 +35,9 @@ export function IngredientsDetails() {
 
 
     return (
-        <>
+        <AppContainer>
             <h2>Ingedients Details</h2>
-            <Link to={"/ingredients"}>
-                voltar
-            </Link>
+            <BackButton linkTo="/ingredients"/>
             <form onSubmit={handleForm}>
                 <label>Descrição</label>
                 <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} />
@@ -47,6 +47,6 @@ export function IngredientsDetails() {
                 <input type="text" value={valuePerUnit} onChange={(e) => setValuePerUnit(Number(e.target.value))} />
                 <input type="submit" value="Atualizar" />
             </form>
-        </>
+        </AppContainer>
     );
 }

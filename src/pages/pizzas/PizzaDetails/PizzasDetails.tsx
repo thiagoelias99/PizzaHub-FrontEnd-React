@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { IIngredient, IIngredientWQuantity } from "../../../models/IIngredient";
 import { IngredientItem } from "./IngredientItem";
 import { WebClient as api } from "../../../services/webclient/axiosConfig";
+import { AppContainer } from "../../../components/AppContainer/AppContainer";
+import { BackButton } from "../../../components/Buttons/BackButton";
 
 const route = "pizzas";
 
@@ -94,11 +96,9 @@ export function PizzasDetails() {
     }
 
     return (
-        <>
-            <h2>Ingedients Details</h2>
-            <Link to={"/pizzas"}>
-                voltar
-            </Link>
+        <AppContainer>
+            <h2>Pizza Details</h2>
+            <BackButton linkTo="/pizzas"/>
             <form onSubmit={handleForm}>
                 <label>Descrição</label>
                 <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} />
@@ -145,6 +145,6 @@ export function PizzasDetails() {
                 })}
             </ul>
             <button onClick={() => handleSave()}>Salvar</button>
-        </>
+        </AppContainer>
     );
 }

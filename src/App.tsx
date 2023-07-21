@@ -1,13 +1,20 @@
-import { useFetch } from "./hooks/useFetch";
-import { IIngredient } from "./models/IIngredient";
-import { WebClient as client } from "./services/webclient/axiosConfig";
-import { AxiosError } from "axios";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
 
 import AppRoutes from "./routes/AppRoutes";
 
+const darkTheme = createTheme({
+    palette: {
+        mode: "dark",
+    },
+});
+
 function App() {
-    return(
-        <AppRoutes />
+    return (
+        <ThemeProvider theme={darkTheme}>
+            <CssBaseline />
+            <AppRoutes />
+        </ThemeProvider>
     );
 }
 

@@ -1,6 +1,9 @@
-import { Link } from "react-router-dom";
 import { useFetch } from "../../hooks/useFetch";
 import { IPizza } from "../../models/IPizza";
+import { AppContainer } from "../../components/AppContainer/AppContainer";
+import { BackButton } from "../../components/Buttons/BackButton";
+import { AppTableContainer } from "../../components/Table/AppTableContainer";
+import { AppTableRow } from "../../components/Table/AppTableRow";
 
 const route = "pizzas";
 
@@ -8,21 +11,24 @@ export function PizzasList() {
     const { data } = useFetch<IPizza[]>(route);
 
     return (
-        <>
+        <AppContainer>
             <h2>Pizzas List</h2>
-            <Link to={"/"}>
-                voltar
-            </Link>
-            <nav>
+            <BackButton />
+            <AppTableContainer headers={["Descrição", "Valor"]}>
                 {data?.map(pizza => {
                     return (
-                        <Link key={pizza.id} to={pizza.id}>
-                            <p>{pizza.description}</p>
-                            <p>{pizza.sellingPrice}</p>
-                        </Link>
+                        <AppTableRow
+                            id={pizza.id}
+                            key={pizza.id}
+                            linkTo={pizza.id}
+                            values={[
+                                pizza.description,
+                                pizza.sellingPrice.toString(),
+                            ]}
+                        />
                     );
                 })}
-            </nav>
-        </>
+            </AppTableContainer>
+        </AppContainer>
     );
 }

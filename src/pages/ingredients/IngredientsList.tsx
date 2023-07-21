@@ -1,28 +1,35 @@
-import { Link } from "react-router-dom";
 import { useFetch } from "../../hooks/useFetch";
 import { IIngredient } from "../../models/IIngredient";
+import { Typography } from "@mui/material";
+import { AppContainer } from "../../components/AppContainer/AppContainer";
+import { BackButton } from "../../components/Buttons/BackButton";
+import { AppTableContainer } from "../../components/Table/AppTableContainer";
+import { AppTableRow } from "../../components/Table/AppTableRow";
 
 const route = "ingredients";
 
 export function IngredientList() {
     const { data } = useFetch<IIngredient[]>(route);
-
     return (
-        <>
-            <h2>Ingedients List</h2>
-            <Link to={"/"}>
-                voltar
-            </Link>
-            <nav>
+        <AppContainer>
+            <Typography variant="h3">Ingedients List</Typography>
+            <BackButton />
+            <AppTableContainer headers={["Descrição", "Valor", "Unidade"]}>
                 {data?.map(ingredient => {
                     return (
-                        <Link key={ingredient.id} to={ingredient.id}>
-                            <p>{ingredient.description}</p>
-                            <p>{ingredient.valuePerUnit}</p>
-                        </Link>
+                        <AppTableRow
+                            id={ingredient.id}
+                            key={ingredient.id}
+                            linkTo={ingredient.id}
+                            values={[
+                                ingredient.description,
+                                ingredient.valuePerUnit.toString(),
+                                ingredient.unit
+                            ]}
+                        />
                     );
                 })}
-            </nav>
-        </>
+            </AppTableContainer>
+        </AppContainer>
     );
 }

@@ -8,7 +8,7 @@ import { AppContainer } from "../../components/AppContainer/AppContainer";
 import { BackButton } from "../../components/Buttons/BackButton";
 import { FormContainer } from "../../components/Forms/FormContainer";
 import { TextField } from "@mui/material";
-import { FormTextField } from "../../components/Forms/FormTextField";
+import { FormTextInputField } from "../../components/Forms/FormTextInputField";
 import { FormSubmitButton } from "../../components/Forms/FormSubmitButton";
 
 const route = "ingredients";
@@ -44,17 +44,17 @@ export function IngredientsDetails() {
             <FormContainer
                 onSubmit={handleForm}
             >
-                <FormTextField
+                <FormTextInputField
                     label="Descrição"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                 />
-                <FormTextField
+                <FormTextInputField
                     label="Unidade"
                     value={unit}
                     onChange={(e) => setUnit(e.target.value)}
                 />
-                <FormTextField
+                <FormTextInputField
                     label="Valor por Unidade"
                     value={valuePerUnit.toString()}
                     onChange={(e) => setValuePerUnit(Number(e.target.value))}

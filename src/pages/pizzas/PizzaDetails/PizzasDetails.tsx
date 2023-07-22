@@ -8,8 +8,12 @@ import { WebClient as api } from "../../../services/webclient/axiosConfig";
 import { AppContainer } from "../../../components/AppContainer/AppContainer";
 import { BackButton } from "../../../components/Buttons/BackButton";
 import { FormContainer } from "../../../components/Forms/FormContainer";
-import { FormTextField } from "../../../components/Forms/FormTextField";
+import { FormTextInputField } from "../../../components/Forms/FormTextInputField";
 import { FormSubmitButton } from "../../../components/Forms/FormSubmitButton";
+import { AppTableContainer } from "../../../components/Table/AppTableContainer";
+import { FormTableRow } from "../../../components/Forms/FormTableRow";
+import { TableCell } from "@mui/material";
+import { FormTextViewField } from "../../../components/Forms/FormTextViewField";
 
 const route = "pizzas";
 
@@ -102,26 +106,42 @@ export function PizzasDetails() {
     return (
         <AppContainer>
             <h2>Pizza Details</h2>
-            <BackButton linkTo="/pizzas"/>
+            <BackButton linkTo="/pizzas" />
 
             <FormContainer
                 onSubmit={handleForm}
             >
-                <FormTextField
+                <FormTextInputField
                     label="Descrição"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                 />
-                <FormTextField
+                <FormTextInputField
                     label="Preço"
                     value={sellingPrice.toString()}
                     onChange={(e) => setSellingPrice(Number(e.target.value))}
                     type="number"
                 />
-                <FormSubmitButton
-                    label="Salvar"
-                />
+
+                <AppTableContainer
+                    headers={["Descrição", "Quantidade", "Unidade"]}
+                >
+                    {ingredients.map(ingredient => {
+                        return (
+                            <IngredientItem
+                                key={ingredient.id}
+                                handleDelete={handleDeleteIngredient}
+                                handleUpdateQuantity={handleUpdateIngredientQuantity}
+                                {...ingredient} />
+                        );
+                    })}
+
+                </AppTableContainer>
             </FormContainer>
+
+            <FormSubmitButton
+                label="Salvar"
+            />
 
             <input type="text" value={searchIngredient} onChange={e => handleSearchIngredient(e.target.value)} />
 
@@ -148,19 +168,6 @@ export function PizzasDetails() {
 
 
             )}
-
-            <ul>
-                {ingredients.map(ingredient => {
-                    return (
-                        <IngredientItem
-                            key={ingredient.id}
-                            handleDelete={handleDeleteIngredient}
-                            handleUpdateQuantity={handleUpdateIngredientQuantity}
-                            {...ingredient} />
-                    );
-                })}
-            </ul>
-            <button onClick={() => handleSave()}>Salvar</button>
         </AppContainer>
     );
 }

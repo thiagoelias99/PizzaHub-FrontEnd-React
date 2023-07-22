@@ -6,6 +6,10 @@ import { useEffect, useState } from "react";
 import { WebClient as api } from "../../services/webclient/axiosConfig";
 import { AppContainer } from "../../components/AppContainer/AppContainer";
 import { BackButton } from "../../components/Buttons/BackButton";
+import { FormContainer } from "../../components/Forms/FormContainer";
+import { TextField } from "@mui/material";
+import { FormTextField } from "../../components/Forms/FormTextField";
+import { FormSubmitButton } from "../../components/Forms/FormSubmitButton";
 
 const route = "ingredients";
 
@@ -33,20 +37,33 @@ export function IngredientsDetails() {
         });
     }
 
-
     return (
         <AppContainer>
             <h2>Ingedients Details</h2>
-            <BackButton linkTo="/ingredients"/>
-            <form onSubmit={handleForm}>
-                <label>Descrição</label>
-                <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} />
-                <label>Unidade</label>
-                <input type="text" value={unit} onChange={(e) => setUnit(e.target.value)} />
-                <label>Valor por Unidade</label>
-                <input type="text" value={valuePerUnit} onChange={(e) => setValuePerUnit(Number(e.target.value))} />
-                <input type="submit" value="Atualizar" />
-            </form>
+            <BackButton linkTo="/ingredients" />
+            <FormContainer
+                onSubmit={handleForm}
+            >
+                <FormTextField
+                    label="Descrição"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                />
+                <FormTextField
+                    label="Unidade"
+                    value={unit}
+                    onChange={(e) => setUnit(e.target.value)}
+                />
+                <FormTextField
+                    label="Valor por Unidade"
+                    value={valuePerUnit.toString()}
+                    onChange={(e) => setValuePerUnit(Number(e.target.value))}
+                    type="number"
+                />
+                <FormSubmitButton
+                    label="Salvar"
+                />
+            </FormContainer>
         </AppContainer>
     );
 }

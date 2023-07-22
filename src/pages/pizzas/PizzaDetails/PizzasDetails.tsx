@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { IPizza } from "../../../models/IPizza";
 import { useFetch } from "../../../hooks/useFetch";
 import { useEffect, useState } from "react";
@@ -7,6 +7,9 @@ import { IngredientItem } from "./IngredientItem";
 import { WebClient as api } from "../../../services/webclient/axiosConfig";
 import { AppContainer } from "../../../components/AppContainer/AppContainer";
 import { BackButton } from "../../../components/Buttons/BackButton";
+import { FormContainer } from "../../../components/Forms/FormContainer";
+import { FormTextField } from "../../../components/Forms/FormTextField";
+import { FormSubmitButton } from "../../../components/Forms/FormSubmitButton";
 
 const route = "pizzas";
 
@@ -30,6 +33,7 @@ export function PizzasDetails() {
 
     async function handleForm(event: React.FormEvent) {
         event.preventDefault();
+        handleSave();
 
     }
 
@@ -99,13 +103,25 @@ export function PizzasDetails() {
         <AppContainer>
             <h2>Pizza Details</h2>
             <BackButton linkTo="/pizzas"/>
-            <form onSubmit={handleForm}>
-                <label>Descrição</label>
-                <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} />
-                <label>Preço</label>
-                <input type="text" value={sellingPrice} onChange={(e) => setSellingPrice(Number(e.target.value))} />
-                <input type="submit" value="Atualizar" />
-            </form>
+
+            <FormContainer
+                onSubmit={handleForm}
+            >
+                <FormTextField
+                    label="Descrição"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                />
+                <FormTextField
+                    label="Preço"
+                    value={sellingPrice.toString()}
+                    onChange={(e) => setSellingPrice(Number(e.target.value))}
+                    type="number"
+                />
+                <FormSubmitButton
+                    label="Salvar"
+                />
+            </FormContainer>
 
             <input type="text" value={searchIngredient} onChange={e => handleSearchIngredient(e.target.value)} />
 

@@ -11,9 +11,7 @@ import { FormContainer } from "../../../components/Forms/FormContainer";
 import { FormTextInputField } from "../../../components/Forms/FormTextInputField";
 import { FormSubmitButton } from "../../../components/Forms/FormSubmitButton";
 import { AppTableContainer } from "../../../components/Table/AppTableContainer";
-import { FormTableRow } from "../../../components/Forms/FormTableRow";
-import { TableCell } from "@mui/material";
-import { FormTextViewField } from "../../../components/Forms/FormTextViewField";
+import { FormAutoComplete } from "../../../components/Forms/FormAutoComplete";
 
 const route = "pizzas";
 
@@ -33,6 +31,7 @@ export function PizzasDetails() {
         setDescription(pizza?.description || "");
         setSellingPrice(pizza?.sellingPrice || 0);
         setIngredients(pizza?.ingredients || []);
+        handleSearchIngredient("");
     }, [pizza]);
 
     async function handleForm(event: React.FormEvent) {
@@ -71,22 +70,31 @@ export function PizzasDetails() {
     }
 
     async function handleSearchIngredient(description: string) {
-        const validatedDescription = description.trimStart().toLowerCase();
-        setSearchIngredient(validatedDescription);
+        // const validatedDescription = description.trimStart().toLowerCase();
+        // setSearchIngredient(validatedDescription);
 
 
-        if (validatedDescription.length != 0) {
-            api().get<IIngredient[]>(`ingredients?description=${validatedDescription}`)
-                .then(response => {
-                    console.log(response.data);
-                    setSearchedIngredients(response.data);
-                });
-        }
+        // if (validatedDescription.length != 0) {
+        api().get<IIngredient[]>("ingredients")
+            .then(response => {
+                console.log(response.data);
+                setSearchedIngredients(response.data);
+            });
+        // api().get<IIngredient[]>(`ingredients?description=${validatedDescription}`)
+        //     .then(response => {
+        //         console.log(response.data);
+        //         setSearchedIngredients(response.data);
+        //     });
+        // }
     }
 
-    function handleSelectIngredient(id: string) {
-        api().get<IIngredient>(`ingredients/${id}`)
-            .then(response => setSelectedIngredient(response.data));
+    function handleSelectIngredient(id?: string) {
+        if(id){
+            api().get<IIngredient>(`ingredients/${id}`)
+                .then(response => setSelectedIngredient(response.data));
+        } else{
+            setSelectedIngredient(null);
+        }
     }
 
     function addIngredient() {
@@ -139,11 +147,27 @@ export function PizzasDetails() {
                 </AppTableContainer>
             </FormContainer>
 
+            <FormAutoComplete
+                value={
+                    selectedIngredient ? { id: selectedIngredient?.id, label: selectedIngredient?.description } : null}
+                onChange={(event: any, newValue: { id: string, label: string } | null) => {
+                    handleSelectIngredient(newValue?.id);
+                }}
+
+                optionList={searchedIngredients.map(ingredient => {
+                    return (
+                        {
+                            id: ingredient.id,
+                            label: ingredient.description
+                        }
+                    );
+                })} />
+
             <FormSubmitButton
                 label="Salvar"
             />
 
-            <input type="text" value={searchIngredient} onChange={e => handleSearchIngredient(e.target.value)} />
+            {/* <input type="text" value={searchIngredient} onChange={e => handleSearchIngredient(e.target.value)} />
 
             <ul>
                 {searchedIngredients.map(({ id, description }) => {
@@ -156,7 +180,7 @@ export function PizzasDetails() {
                         </li>
                     );
                 })}
-            </ul>
+            </ul> */}
 
             {selectedIngredient && (
                 <>

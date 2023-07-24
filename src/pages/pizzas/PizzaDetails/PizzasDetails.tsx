@@ -12,26 +12,29 @@ import { FormTextInputField } from "../../../components/Forms/FormTextInputField
 import { FormSubmitButton } from "../../../components/Forms/FormSubmitButton";
 import { AppTableContainer } from "../../../components/Table/AppTableContainer";
 import { FormAutoComplete } from "../../../components/Forms/FormAutoComplete";
+import { Box, Button, Dialog, DialogContent, DialogTitle, Typography } from "@mui/material";
+import { FormTextViewField } from "../../../components/Forms/FormTextViewField";
 
-const route = "pizzas";
+const pizzaRoute = "pizzas";
+const ingredientsRoute = "ingredients";
 
 export function PizzasDetails() {
     const { id } = useParams();
-    const { data: pizza } = useFetch<IPizza | null>(`${route}/${id}`);
+    const { data: pizza } = useFetch<IPizza | null>(`${pizzaRoute}/${id}`);
 
     const [description, setDescription] = useState("");
     const [sellingPrice, setSellingPrice] = useState(0);
     const [ingredients, setIngredients] = useState<IIngredientWQuantity[] | []>([]);
-    const [searchIngredient, setSearchIngredient] = useState("");
     const [searchedIngredients, setSearchedIngredients] = useState<IIngredient[] | []>([]);
     const [selectedIngredient, setSelectedIngredient] = useState<IIngredient | null>(null);
     const [quantity, setquantity] = useState(0);
+    const [open, setOpen] = useState(false);
 
     useEffect(() => {
         setDescription(pizza?.description || "");
         setSellingPrice(pizza?.sellingPrice || 0);
         setIngredients(pizza?.ingredients || []);
-        handleSearchIngredient("");
+        searchIngredients();
     }, [pizza]);
 
     async function handleForm(event: React.FormEvent) {
@@ -55,8 +58,7 @@ export function PizzasDetails() {
     }
 
     async function handleSave() {
-        console.log("handle Save");
-        await api().put(`${route}/${id}`,
+        await api().put(`${pizzaRoute}/${id}`,
             {
                 description,
                 sellingPrice,
@@ -69,35 +71,25 @@ export function PizzasDetails() {
             });
     }
 
-    async function handleSearchIngredient(description: string) {
-        // const validatedDescription = description.trimStart().toLowerCase();
-        // setSearchIngredient(validatedDescription);
-
-
-        // if (validatedDescription.length != 0) {
-        api().get<IIngredient[]>("ingredients")
+    async function searchIngredients() {
+        api().get<IIngredient[]>(ingredientsRoute)
             .then(response => {
                 console.log(response.data);
                 setSearchedIngredients(response.data);
             });
-        // api().get<IIngredient[]>(`ingredients?description=${validatedDescription}`)
-        //     .then(response => {
-        //         console.log(response.data);
-        //         setSearchedIngredients(response.data);
-        //     });
-        // }
     }
 
-    function handleSelectIngredient(id?: string) {
-        if(id){
-            api().get<IIngredient>(`ingredients/${id}`)
+    function searchIngredientById(id?: string) {
+        if (id) {
+            api().get<IIngredient>(`${ingredientsRoute}/${id}`)
                 .then(response => setSelectedIngredient(response.data));
-        } else{
+        } else {
             setSelectedIngredient(null);
         }
     }
 
-    function addIngredient() {
+    function addIngredientToList() {
+        closeAddIngredientDialog();
         if (selectedIngredient) {
             const ingredients2 = [...ingredients];
 
@@ -108,28 +100,43 @@ export function PizzasDetails() {
 
             setIngredients(ingredients2);
         }
+    }
 
+    function openAddIngredientDialog() {
+        setOpen(true);
+    }
+
+    function closeAddIngredientDialog() {
+        setOpen(false);
     }
 
     return (
         <AppContainer>
-            <h2>Pizza Details</h2>
+            <Typography variant="h4">Detalhes da Pizza</Typography>
             <BackButton linkTo="/pizzas" />
 
             <FormContainer
                 onSubmit={handleForm}
             >
-                <FormTextInputField
-                    label="Descrição"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                />
-                <FormTextInputField
-                    label="Preço"
-                    value={sellingPrice.toString()}
-                    onChange={(e) => setSellingPrice(Number(e.target.value))}
-                    type="number"
-                />
+                <Box
+                    display="flex"
+                    gap={1}
+                >
+                    <FormTextInputField
+                        label="Descrição"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                    />
+                    <FormTextInputField
+                        label="Preço"
+                        value={sellingPrice.toString()}
+                        onChange={(e) => setSellingPrice(Number(e.target.value))}
+                        type="number"
+                    />
+                </Box>
+
+                <Typography variant="h5">Ingredientes</Typography>
+                <Button onClick={openAddIngredientDialog}>Adicionar</Button>
 
                 <AppTableContainer
                     headers={["Descrição", "Quantidade", "Unidade"]}
@@ -145,53 +152,41 @@ export function PizzasDetails() {
                     })}
 
                 </AppTableContainer>
+
+                <FormSubmitButton
+                    label="Salvar"
+                />
             </FormContainer>
-
-            <FormAutoComplete
-                value={
-                    selectedIngredient ? { id: selectedIngredient?.id, label: selectedIngredient?.description } : null}
-                onChange={(event: any, newValue: { id: string, label: string } | null) => {
-                    handleSelectIngredient(newValue?.id);
-                }}
-
-                optionList={searchedIngredients.map(ingredient => {
-                    return (
-                        {
-                            id: ingredient.id,
-                            label: ingredient.description
-                        }
-                    );
-                })} />
-
-            <FormSubmitButton
-                label="Salvar"
-            />
-
-            {/* <input type="text" value={searchIngredient} onChange={e => handleSearchIngredient(e.target.value)} />
-
-            <ul>
-                {searchedIngredients.map(({ id, description }) => {
-                    return (
-                        <li
-                            key={id}
-                            onClick={() => handleSelectIngredient(id)}
-                        >
-                            {description}
-                        </li>
-                    );
-                })}
-            </ul> */}
-
-            {selectedIngredient && (
-                <>
-                    <p>{selectedIngredient.description}</p>
-                    <p>{selectedIngredient.unit}</p>
-                    <input type="number" value={quantity} onChange={e => setquantity(Number(e.target.value))} />
-                    <input type="button" onClick={() => addIngredient()} />
-                </>
-
-
-            )}
+            <Dialog open={open} onClose={closeAddIngredientDialog} >
+                <DialogTitle>Adicionar Ingrediente</DialogTitle>
+                <DialogContent>
+                    <Box
+                        height={350}
+                    >
+                        <FormAutoComplete
+                            value={
+                                selectedIngredient ? { id: selectedIngredient?.id, label: selectedIngredient?.description } : null}
+                            onChange={(event: any, newValue: { id: string, label: string } | null) => {
+                                searchIngredientById(newValue?.id);
+                            }}
+                            optionList={searchedIngredients.map(ingredient => {
+                                return (
+                                    {
+                                        id: ingredient.id,
+                                        label: ingredient.description
+                                    }
+                                );
+                            })} />
+                        <FormTextViewField value={selectedIngredient?.unit} label="Unidade" />
+                        <FormTextInputField
+                            value={quantity.toString()}
+                            type="number"
+                            onChange={e => setquantity(Number(e.target.value))}
+                        />
+                        <Button onClick={() => addIngredientToList()}>Adicionar</Button>
+                    </Box>
+                </DialogContent>
+            </Dialog>
         </AppContainer>
     );
 }

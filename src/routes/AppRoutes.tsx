@@ -8,6 +8,10 @@ import { PizzasDetails } from "../pages/pizzas/PizzaDetails/PizzasDetails";
 import { useAppDrawerContext } from "../context/DrawerContext";
 import { useEffect } from "react";
 
+import HomeIcon from "@mui/icons-material/Home";
+import LocalPizzaIcon from "@mui/icons-material/LocalPizza";
+import InventoryIcon from "@mui/icons-material/Inventory";
+
 const AppRoutes = () => {
     const { setDrawerOptions } = useAppDrawerContext();
 
@@ -15,17 +19,17 @@ const AppRoutes = () => {
     useEffect(() => {
         setDrawerOptions([
             {
-                icon: "localpizza",
+                icon: <HomeIcon />,
                 path: "/dashboard",
                 label: "Página Inicial",
             },
             {
-                icon: "people",
+                icon: <InventoryIcon />,
                 path: "/ingredients",
                 label: "Ingredientes",
             },
             {
-                icon: "location_city",
+                icon: <LocalPizzaIcon />,
                 path: "/pizzas",
                 label: "Pizzas",
             },

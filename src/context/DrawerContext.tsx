@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useState } from "react";
 
 interface IDrawerOption {
-    icon: string
+    icon: JSX.Element
     path: string;
     label: string;
 }

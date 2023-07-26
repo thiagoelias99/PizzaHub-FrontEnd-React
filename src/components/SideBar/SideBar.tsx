@@ -2,9 +2,10 @@ import { Box, Drawer, Icon, List, ListItemButton, ListItemIcon, ListItemText, us
 import { useMatch, useNavigate, useResolvedPath } from "react-router-dom";
 import { useAppDrawerContext } from "../../context/DrawerContext";
 
+
 interface IListItemLink {
     to: string;
-    icon: string;
+    icon: JSX.Element;
     label: string;
     onClick: (() => void) | undefined;
 }
@@ -26,7 +27,7 @@ const ListItemLink: React.FC<IListItemLink> = ({ to, icon, label, onClick }) => 
             onClick={handleClick}
             selected={!!match}>
             <ListItemIcon>
-                <Icon>{icon}</Icon>
+                {icon}
             </ListItemIcon>
             <ListItemText primary={label}>
             </ListItemText>
@@ -56,7 +57,7 @@ export const SideBar: React.FC<ISideBarProps> = ({ children }) => {
                     overflow='hidden'
                     height='100%'
                     display='flex'
-                    flexDirection='column'>                 
+                    flexDirection='column'>
 
                     {/* Menu Options */}
                     <Box flex={1}>
@@ -70,7 +71,7 @@ export const SideBar: React.FC<ISideBarProps> = ({ children }) => {
                                     onClick={smDown ? toggleDrawerOpen : undefined} />
                             ))}
                         </List>
-                    </Box>                    
+                    </Box>
                 </Box>
             </Drawer>
 
